@@ -8,6 +8,7 @@ export const MainPage = () => {
   const [searchMed2, setSearchMed2] = useState("");
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false)
 
   const response = {
     strong_enhancement: "Усиление действия",
@@ -21,9 +22,11 @@ export const MainPage = () => {
   const checkInteraction = async () => {
     setError("");
     setResult(null);
+    setLoading(true)
 
     if (!med1 || !med2) {
       setError("Пожалуйста, введите оба названия препаратов.");
+      setLoading(false)
       return;
     }
 
@@ -41,10 +44,14 @@ export const MainPage = () => {
         setSearchMed2(med2);
         setResult(data);
       }
+      setLoading(false)
     } catch (e) {
       console.log(e)
+      setLoading(false)
       setError("Ошибка подключения к серверу.");
     }
+
+    // setLoading(false)
   };  
 
   return (
@@ -75,18 +82,32 @@ export const MainPage = () => {
             />
           </div>
 
-          <button className="btn btn-primary w-100" onClick={checkInteraction}>
-            Проверить взаимодействие
+          <button className="btn btn-primary w-100" onClick={checkInteraction} disabled={loading}>
+            {loading ? "Загрузка..." : "Проверить взаимодействие"}
           </button>
 
-          {error && (
+          {loading && (
+            <div className="loader-container mt-4">
+              <div className="custom-loader"></div>
+              <div className="text-muted mt-2">Анализируем взаимодействие...</div>
+            </div>
+          )}
+
+
+          {error && !loading && (
             <div className="alert alert-danger mt-4 text-center" role="alert">
               {error}
             </div>
           )}
 
-          {result && (
-            <ResultBox result={result} med1={searchMed1} med2={searchMed2} response={response}/>
+
+          {result && !loading && (
+            <ResultBox
+              result={result}
+              med1={searchMed1}
+              med2={searchMed2}
+              response={response}
+            />
           )}
         </div>
       </div>
