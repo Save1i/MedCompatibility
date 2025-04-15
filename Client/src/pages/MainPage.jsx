@@ -15,9 +15,10 @@ export const MainPage = () => {
       return;
     }
 
+
     try {
       const res = await fetch(
-        `http://localhost:5000/api/medication?med1=${med1}&med2=${med2}`
+        `${import.meta.env.VITE_SERVER_URL}/api/medication?med1=${med1}&med2=${med2}`
       );
       const data = await res.json();
 
@@ -26,7 +27,8 @@ export const MainPage = () => {
       } else {
         setResult(data);
       }
-    } catch (err) {
+    } catch (e) {
+      console.log(e)
       setError("Ошибка подключения к серверу.");
     }
   };
