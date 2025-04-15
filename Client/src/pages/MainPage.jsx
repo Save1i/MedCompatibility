@@ -1,10 +1,22 @@
 import { useState } from "react";
+import { ResultBox } from "../components/ResultBox";
 
 export const MainPage = () => {
   const [med1, setMed1] = useState("");
   const [med2, setMed2] = useState("");
+  const [searchMed1, setSearchMed1] = useState("");
+  const [searchMed2, setSearchMed2] = useState("");
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
+
+  const response = {
+    strong_enhancement: "Усиление действия",
+    mild_enhancement: "Слабое усиление действия",
+    reduction: "Ослабление действия",
+    toxicity_increase: "Усиление токсичности",
+    no_data: "Нет информации о взаимодействии",
+    incompatible: "Не совместимы",
+  }
 
   const checkInteraction = async () => {
     setError("");
@@ -25,13 +37,15 @@ export const MainPage = () => {
       if (!res.ok) {
         setError(data.error || "Ошибка при получении данных.");
       } else {
+        setSearchMed1(med1);
+        setSearchMed2(med2);
         setResult(data);
       }
     } catch (e) {
       console.log(e)
       setError("Ошибка подключения к серверу.");
     }
-  };
+  };  
 
   return (
     <div className="container mt-5">
@@ -72,21 +86,7 @@ export const MainPage = () => {
           )}
 
           {result && (
-            <div className="alert alert-info mt-4 text-center">
-              <h5 className="mb-2">Результат взаимодействия:</h5>
-              <p>
-                <strong>{result.med1}</strong> +{" "}
-                <strong>{result.med2}</strong>
-              </p>
-              <p>
-                <strong>Тип:</strong> {result.status}
-              </p>
-              {result.comment && (
-                <p>
-                  <strong>Комментарий:</strong> {result.comment}
-                </p>
-              )}
-            </div>
+            <ResultBox result={result} med1={searchMed1} med2={searchMed2} response={response}/>
           )}
         </div>
       </div>
