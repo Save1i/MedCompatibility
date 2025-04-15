@@ -28,7 +28,7 @@ class MedicationController {
     });
 
     if (!interaction) {
-      return res.status(404).json({ status: "no_data", message: "Нет информации о взаимодействии" });
+      return res.json({ status: "no_data", message: "Нет информации о взаимодействии" });
     }
 
     return res.json({
