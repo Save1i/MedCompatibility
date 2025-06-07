@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { ResultBox } from "../components/ResultBox";
-import SmartClue from "../components/SmartClue";
-import SmartClue2 from "../components/SmartClue2";
 import { useClickOutside } from "../components/useClickOutside";
 
 export const MainPage = () => {
@@ -12,8 +10,6 @@ export const MainPage = () => {
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false)
-  const [promt1, setPromt1] = useState([]);
-  const [promt2, setPromt2] = useState([]);
   const [active1, setActive1] = useState(false)
   const [active2, setActive2] = useState(false)
 
@@ -49,12 +45,6 @@ export const MainPage = () => {
         `${import.meta.env.VITE_LOCAL_URL}/api/_search?value=${med1}`
       );
       const data = await res.json();
-      if (Array.isArray(data) && med1) {
-        setPromt1(data);
-      } else {
-        setPromt1([]);
-      }
-
       console.log(data)
     } catch (error) {
       console.log(error)
@@ -68,11 +58,6 @@ export const MainPage = () => {
         `${import.meta.env.VITE_LOCAL_URL}/api/_search?value=${med2}`
       );
       const data = await res.json();
-      if (Array.isArray(data) && med2) {
-        setPromt2(data);
-      } else {
-        setPromt2([]);
-      }
 
       console.log(data)
     } catch (error) {
@@ -132,10 +117,6 @@ export const MainPage = () => {
               onChange={(e) => setMed1(e.target.value)}
               onFocus={()=>setActive1(true)}
             />
-              {active1 && promt1.length > 0 ? (
-                <SmartClue promt={promt1} setMed1={setMed1} setActive1={setActive1}/>)
-                : <div style={{height:"80px"}}></div>
-              }
           </div>
 
           <div className="mb-3" ref={ref2}>
@@ -147,9 +128,7 @@ export const MainPage = () => {
             onChange={(e) => setMed2(e.target.value)}
             onFocus={() => setActive2(true)}
           />
-          {active2 && promt2.length > 0 ? (
-            <SmartClue2 promt={promt2} setMed2={setMed2} setActive2={setActive2}/>
-          ) : <div style={{height:"80px"}}></div>}
+          
         </div>
 
 
